@@ -1,4 +1,4 @@
 JSynFX
 ======
 
-A fabulous audio production server
+A fabulous audio production server.

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1405221967086
+Build-Jdk: 1.8.0_20-ea
+Built-By: stefan.illgen
+Bundle-Activator: org.devel.jsynfx.Activator
+Bundle-ClassPath: .,target/dependency/JSyn-16.6.4.jar
+Bundle-ManifestVersion: 2
+Bundle-Name: JSynFX
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-SymbolicName: JSynFX
+Bundle-Version: 0.0.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Embed-Dependency: JSyn;scope=compile|runtime;inline=false
+Embed-Directory: target/dependency
+Embed-StripGroup: true
+Embedded-Artifacts: target/dependency/JSyn-16.6.4.jar;g="com.jsyn";a="JS
+ yn";v="16.6.4"
+Export-Package: com.jsyn.examples;version="0.0.1.SNAPSHOT",org.devel.jsy
+ nfx;version="0.0.1.SNAPSHOT"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-2.3.0.201405100607
