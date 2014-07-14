@@ -8,11 +8,11 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
@@ -95,10 +95,10 @@ public class SawFader extends Application {
     public class SawFaderController implements Initializable {
 
         @FXML
-        private Pane rotatePane;
+        private Group rotatePane;
 
         @FXML
-        private Circle rotateCircle;
+        private MeshView rotateCircle;
         private double lastY = Double.NaN;
 
         private Rotate rotate;
@@ -133,9 +133,19 @@ public class SawFader extends Application {
 
         @Override
         public void initialize(java.net.URL location, ResourceBundle resources) {
-            rotate = new Rotate(0, 20, 20);
+            // rotate = new Rotate(0, 20, 20);
+            rotate = new Rotate(0, 0, 0/*-72.7*/, 0, Rotate.Z_AXIS);
+            // rotate.pivotXProperty()
+            // .bind(Bindings.createDoubleBinding(() ->
+            // rotateCircle.getBoundsInLocal().getWidth() / 2,
+            // rotateCircle.boundsInParentProperty()));
+            // rotate.pivotYProperty()
+            // .bind(Bindings.createDoubleBinding(() ->
+            // rotateCircle.getBoundsInLocal().getHeight() / 2,
+            // rotateCircle.boundsInParentProperty()));
             rotatePane.getTransforms().add(rotate);
-            rotateCircle.setRotate((360 - KNOB_RANGE_IN_DEGREE) / 2);
+            // rotateCircle.getTransforms().add(new Rotate((360 -
+            // KNOB_RANGE_IN_DEGREE) / 2, 0, 0, 0, Rotate.Z_AXIS));
         }
     }
 }
