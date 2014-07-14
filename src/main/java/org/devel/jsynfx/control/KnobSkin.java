@@ -1,78 +1,31 @@
-package org.devel.jsynfx;
+package org.devel.jsynfx.control;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.Control;
+import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
-public class SawFader extends Control {
+public class KnobSkin extends SkinBase<Knob> {
 
-    private static final URL URL = SawFader.class.getResource("./SawFader.fxml");
+    private static final URL URL = KnobSkin.class.getResource("./Knob.fxml");
 
     // TODO replace
-    private static final double DRAG_AREA_HEIGHT = 150;
+    public static final double DRAG_AREA_HEIGHT = 150;
+    public static final double RANGE_IN_DEGREE = 300;
 
-    public SawFader() {
+    public KnobSkin(final Knob knob) {
+        super(knob);
         getChildren().add(loadFXML());
-    }
-
-    public SawFader(double minValue, double maxValue) {
-        this();
-        setMinValue(minValue);
-        setMaxValue(maxValue);
-    }
-
-    private DoubleProperty value;
-
-    public DoubleProperty valueProperty() {
-        return value == null ? value = new SimpleDoubleProperty(getMinValue()) : value;
-    }
-
-    public double getValue() {
-        return valueProperty().get();
-    }
-
-    public void setValue(double value) {
-        this.valueProperty().set(value);
-    }
-
-    private DoubleProperty minValue;
-
-    public DoubleProperty minValueProperty() {
-        return minValue == null ? minValue = new SimpleDoubleProperty(0) : minValue;
-    }
-
-    public double getMinValue() {
-        return minValueProperty().get();
-    }
-
-    public void setMinValue(double minValue) {
-        this.minValueProperty().set(minValue);
-    }
-
-    private DoubleProperty maxValue;
-
-    public DoubleProperty maxValueProperty() {
-        return maxValue == null ? maxValue = new SimpleDoubleProperty(0) : maxValue;
-    }
-
-    public double getMaxValue() {
-        return maxValueProperty().get();
-    }
-
-    public void setMaxValue(double maxValue) {
-        this.maxValueProperty().set(maxValue);
+        getSkinnable().requestLayout();
     }
 
     private Parent loadFXML() {
@@ -84,10 +37,6 @@ public class SawFader extends Control {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private double getKnobRangeAsDegree() {
-        return 300;
     }
 
     public class SawFaderController implements Initializable {
@@ -110,13 +59,13 @@ public class SawFader extends Control {
         void onMouseDragOver(MouseEvent event) {
             if (lastY != Double.NaN) {
                 final double y = event.getSceneY();
-                double newAngle = rotate.getAngle() + (lastY - y) / DRAG_AREA_HEIGHT * getKnobRangeAsDegree();
+                double newAngle = rotate.getAngle() + (lastY - y) / DRAG_AREA_HEIGHT * RANGE_IN_DEGREE;
 
-                if (newAngle >= 0 && newAngle <= getKnobRangeAsDegree()) {
+                if (newAngle >= 0 && newAngle <= RANGE_IN_DEGREE) {
                     rotate.setAngle(newAngle);
                     lastY = y;
-                } else if (newAngle > getKnobRangeAsDegree()) {
-                    rotate.setAngle(getKnobRangeAsDegree());
+                } else if (newAngle > RANGE_IN_DEGREE) {
+                    rotate.setAngle(RANGE_IN_DEGREE);
                 } else if (newAngle < 0) {
                     rotate.setAngle(0);
                 }
@@ -142,10 +91,12 @@ public class SawFader extends Control {
             // rotateCircle.boundsInParentProperty()));
             rotatePane.getTransforms().add(rotate);
 
-            valueProperty().bind(rotate.angleProperty()
-                                       .multiply(maxValueProperty().subtract(minValueProperty()))
-                                       .divide(getKnobRangeAsDegree())
-                                       .add(minValueProperty()));
+            getSkinnable().valueProperty()
+                          .bind(rotate.angleProperty()
+                                      .multiply(getSkinnable().maxValueProperty()
+                                                              .subtract(getSkinnable().minValueProperty()))
+                                      .divide(RANGE_IN_DEGREE)
+                                      .add(getSkinnable().minValueProperty()));
         }
     }
 }

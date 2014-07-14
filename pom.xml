@@ -52,6 +52,11 @@
 			<version>5.0.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>maven-bundle-plugin</artifactId>
 			<version>2.5.0</version>
@@ -141,25 +146,27 @@
 
 							<_include>src/main/resources/META-INF/MANIFEST.MF</_include>
 
+							<!-- <Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency> -->
 							<Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
 							<Embed-Directory>target/dependency</Embed-Directory>
 							<Embed-StripGroup>true</Embed-StripGroup>
+							<Embed-Transitive>true</Embed-Transitive>
 							<!-- given by x boot class path -->
 							<Import-Package>!javafx.*,!com.portaudio.*,*</Import-Package>
-							<!-- <Include-Resource> -->
-							<!-- {maven-resources}, {maven-dependencies} -->
-							<!-- </Include-Resource> -->
+<!-- 							<Include-Resource> -->
+<!-- 								{maven-resources}, {maven-dependencies} -->
+<!-- 							</Include-Resource> -->
 							<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 							<!-- <DynamicImport-Package>*</DynamicImport-Package> -->
-<!-- 							<Import-Package>!com.sun.deploy.uitoolkit.*,!com.sun.glass.*,!com.sun.javafx.*,!com.sun.media.*,!com.sun.openpisces,!com.sun.pisces,!com.sun.prism*,!com.sun.scenario*,!com.sun.webkit*,!javafx.*,!netscape.javascript,!com.portaudio.*,*</Import-Package> -->
+							<!-- <Import-Package>!com.sun.deploy.uitoolkit.*,!com.sun.glass.*,!com.sun.javafx.*,!com.sun.media.*,!com.sun.openpisces,!com.sun.pisces,!com.sun.prism*,!com.sun.scenario*,!com.sun.webkit*,!javafx.*,!netscape.javascript,!com.portaudio.*,*</Import-Package> -->
 							<!-- <Export-Package>com.jsyn.*,com.softsynth.*</Export-Package> -->
 							<!-- <Export-Package>org.devel.jsynfx.*,com.jsyn.*,!com.jsyn.examples</Export-Package> -->
 							<!-- <Private-Package>com.jsyn.*,com.softsynth.*</Private-Package> -->
-							
+
 						</instructions>
 					</configuration>
 				</plugin>
-				<!--  eclipse integration -->
+				<!-- eclipse integration -->
 				<plugin>
 					<groupId>org.maven.ide.eclipse</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -219,7 +226,7 @@
 									<action>
 										<execute>
 											<Ignore />
-<!-- 											<runOnIncremental>true</runOnIncremental> -->
+											<!-- <runOnIncremental>true</runOnIncremental> -->
 										</execute>
 									</action>
 								</pluginExecution>
@@ -265,31 +272,31 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<artifactId>maven-site-plugin</artifactId> -->
-<!-- 				<version>3.3</version> -->
-<!-- 			</plugin> -->
-<!-- 			<plugin> -->
-<!-- 				<artifactId>maven-assembly-plugin</artifactId> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>make-assembly</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>single</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<descriptorRefs> -->
-<!-- 								<descriptorRef>project</descriptorRef> -->
-<!-- 							</descriptorRefs> -->
-<!-- 							<formats> -->
-<!-- 								<format>zip</format> -->
-<!-- 								<format>tar.gz</format> -->
-<!-- 							</formats> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<!-- <plugin> -->
+			<!-- <artifactId>maven-site-plugin</artifactId> -->
+			<!-- <version>3.3</version> -->
+			<!-- </plugin> -->
+			<!-- <plugin> -->
+			<!-- <artifactId>maven-assembly-plugin</artifactId> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>make-assembly</id> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>single</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <descriptorRefs> -->
+			<!-- <descriptorRef>project</descriptorRef> -->
+			<!-- </descriptorRefs> -->
+			<!-- <formats> -->
+			<!-- <format>zip</format> -->
+			<!-- <format>tar.gz</format> -->
+			<!-- </formats> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>

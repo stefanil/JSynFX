@@ -18,7 +18,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.clean=true -Dosgi.noShutdown=true -Declipse.ignoreApp=true -Dosgi.console.enable.builtin=true -Djetty.home=configuration/jetty -Dfelix.fileinstall.dir=./configuration/bundle-cfg -Dlogback.configurationFile=configuration/logback/logback.xml -Ddigitalreality.config.filepath=./configuration/digitalreality/DigitalRealityConfig.xml&#13;&#10;&quot;-Xbootclasspath/a:c:\Program Files\Java\jdk1.8.0_20_15\jre\lib\ext\jfxrt.jar&quot;"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <booleanAttribute key="show_selected_only" value="false"/>
-<stringAttribute key="target_bundles" value="javax.servlet@default:default,javax.transaction@default:false,org.apache.commons.io@default:default,org.apache.felix.configadmin@default:default,org.eclipse.core.jobs@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.frameworkadmin.equinox@default:default,org.eclipse.equinox.frameworkadmin@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.equinox.util@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.eclipse.virgo.osgi.console@default:false,org.eclipse.virgo.osgi.extensions.equinox@default:false"/>
+<stringAttribute key="target_bundles" value="javax.transaction@default:false,org.eclipse.osgi@-1:true,org.eclipse.virgo.osgi.console@default:false,org.eclipse.virgo.osgi.extensions.equinox@default:false"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
