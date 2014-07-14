@@ -4,52 +4,75 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
 
-import com.jsyn.JSyn;
-import com.jsyn.Synthesizer;
-import com.jsyn.unitgen.LineOut;
-import com.jsyn.unitgen.LinearRamp;
-import com.jsyn.unitgen.SawtoothOscillatorBL;
-import com.jsyn.unitgen.UnitOscillator;
-
-public class SawFader extends Application {
+public class SawFader extends Control {
 
     private static final URL URL = SawFader.class.getResource("./SawFader.fxml");
 
-    private static final double MINIMUM_FREQUENCY = 200;
-    private static final double BANDWIDTH = 500.0;
-    private static final double KNOB_RANGE_IN_DEGREE = 300;
+    // TODO replace
     private static final double DRAG_AREA_HEIGHT = 150;
 
-    public static void main(String[] args) {
-        launch(args);
+    public SawFader() {
+        getChildren().add(loadFXML());
     }
 
-    private Synthesizer synth;
-    private UnitOscillator osc;
-    private LinearRamp lag;
-    private LineOut lineOut;
+    public SawFader(double minValue, double maxValue) {
+        this();
+        setMinValue(minValue);
+        setMaxValue(maxValue);
+    }
 
-    @Override
-    public void start(Stage primaryStage) {
-        createSynth();
-        primaryStage.setScene(new Scene(loadFXML(), 400.0, 400.0));
-        primaryStage.show();
-        primaryStage.sizeToScene();
-        primaryStage.setOnCloseRequest(event -> {
-            synth.stop();
-        });
+    private DoubleProperty value;
+
+    public DoubleProperty valueProperty() {
+        return value == null ? value = new SimpleDoubleProperty(getMinValue()) : value;
+    }
+
+    public double getValue() {
+        return valueProperty().get();
+    }
+
+    public void setValue(double value) {
+        this.valueProperty().set(value);
+    }
+
+    private DoubleProperty minValue;
+
+    public DoubleProperty minValueProperty() {
+        return minValue == null ? minValue = new SimpleDoubleProperty(0) : minValue;
+    }
+
+    public double getMinValue() {
+        return minValueProperty().get();
+    }
+
+    public void setMinValue(double minValue) {
+        this.minValueProperty().set(minValue);
+    }
+
+    private DoubleProperty maxValue;
+
+    public DoubleProperty maxValueProperty() {
+        return maxValue == null ? maxValue = new SimpleDoubleProperty(0) : maxValue;
+    }
+
+    public double getMaxValue() {
+        return maxValueProperty().get();
+    }
+
+    public void setMaxValue(double maxValue) {
+        this.maxValueProperty().set(maxValue);
     }
 
     private Parent loadFXML() {
@@ -63,33 +86,8 @@ public class SawFader extends Application {
         return null;
     }
 
-    private void createSynth() {
-        synth = JSyn.createSynthesizer();
-        synth.setRealTime(true);
-
-        // Add a tone generator. (band limited sawtooth)
-        synth.add(osc = new SawtoothOscillatorBL());
-        // Add a lag to smooth out amplitude changes and avoid pops.
-        synth.add(lag = new LinearRamp());
-        // Add an output mixer.
-        synth.add(lineOut = new LineOut());
-        // Connect the oscillator to both left and right output.
-        osc.output.connect(0, lineOut.input, 0);
-        osc.output.connect(0, lineOut.input, 1);
-
-        // Set the minimum, current and maximum values for the port.
-        lag.output.connect(osc.amplitude);
-        lag.input.setup(0.0, 0.5, 1.0);
-        lag.time.set(0.2);
-
-        osc.frequency.setup(50.0, 300.0, 10000.0);
-
-        // Start synthesizer using default stereo output at 44100 Hz.
-        synth.start();
-
-        // We only need to start the LineOut. It will pull data from the
-        // oscillator.
-        lineOut.start();
+    private double getKnobRangeAsDegree() {
+        return 300;
     }
 
     public class SawFaderController implements Initializable {
@@ -112,14 +110,13 @@ public class SawFader extends Application {
         void onMouseDragOver(MouseEvent event) {
             if (lastY != Double.NaN) {
                 final double y = event.getSceneY();
-                double newAngle = rotate.getAngle() + (lastY - y) / DRAG_AREA_HEIGHT * KNOB_RANGE_IN_DEGREE;
+                double newAngle = rotate.getAngle() + (lastY - y) / DRAG_AREA_HEIGHT * getKnobRangeAsDegree();
 
-                if (newAngle >= 0 && newAngle <= KNOB_RANGE_IN_DEGREE) {
+                if (newAngle >= 0 && newAngle <= getKnobRangeAsDegree()) {
                     rotate.setAngle(newAngle);
                     lastY = y;
-                    osc.frequency.set((newAngle / KNOB_RANGE_IN_DEGREE) * BANDWIDTH + MINIMUM_FREQUENCY);
-                } else if (newAngle > KNOB_RANGE_IN_DEGREE) {
-                    rotate.setAngle(KNOB_RANGE_IN_DEGREE);
+                } else if (newAngle > getKnobRangeAsDegree()) {
+                    rotate.setAngle(getKnobRangeAsDegree());
                 } else if (newAngle < 0) {
                     rotate.setAngle(0);
                 }
@@ -133,8 +130,8 @@ public class SawFader extends Application {
 
         @Override
         public void initialize(java.net.URL location, ResourceBundle resources) {
-            // rotate = new Rotate(0, 20, 20);
-            rotate = new Rotate(0, 0, 0/*-72.7*/, 0, Rotate.Z_AXIS);
+            rotatePane.getTransforms().add(new Rotate(30, 0, 0, 0, Rotate.Z_AXIS));
+            rotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
             // rotate.pivotXProperty()
             // .bind(Bindings.createDoubleBinding(() ->
             // rotateCircle.getBoundsInLocal().getWidth() / 2,
@@ -144,8 +141,11 @@ public class SawFader extends Application {
             // rotateCircle.getBoundsInLocal().getHeight() / 2,
             // rotateCircle.boundsInParentProperty()));
             rotatePane.getTransforms().add(rotate);
-            // rotateCircle.getTransforms().add(new Rotate((360 -
-            // KNOB_RANGE_IN_DEGREE) / 2, 0, 0, 0, Rotate.Z_AXIS));
+
+            valueProperty().bind(rotate.angleProperty()
+                                       .multiply(maxValueProperty().subtract(minValueProperty()))
+                                       .divide(getKnobRangeAsDegree())
+                                       .add(minValueProperty()));
         }
     }
 }
