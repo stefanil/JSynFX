@@ -51,7 +51,8 @@ public class Activator implements BundleActivator {
         // create stage
         Platform.runLater(() -> {
             stage = new Stage();
-            stage.setScene(new Scene(createRoot(), 800, 300));
+            Scene scene = new Scene(createRoot());
+            stage.setScene(scene);
             stage.show();
             stage.sizeToScene();
             stage.setOnCloseRequest(event -> {

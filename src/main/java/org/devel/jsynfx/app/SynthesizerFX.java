@@ -4,6 +4,7 @@
 package org.devel.jsynfx.app;
 
 import javafx.scene.Parent;
+import javafx.scene.layout.HBox;
 
 import org.devel.jsynfx.control.Knob;
 
@@ -19,8 +20,8 @@ import com.jsyn.unitgen.UnitOscillator;
  */
 public class SynthesizerFX {
 
-    private static final double MINIMUM_FREQUENCY = 200;
-    private static final double MAXIMUM_FREQUENCY = 700;
+    private static final double MINIMUM_FREQUENCY = 50;
+    private static final double MAXIMUM_FREQUENCY = 1000.0;
 
     private Synthesizer synth;
     private UnitOscillator osc;
@@ -53,7 +54,8 @@ public class SynthesizerFX {
         lag.input.setup(0.0, 0.5, 1.0);
         lag.time.set(0.2);
 
-        osc.frequency.setup(MINIMUM_FREQUENCY, 300.0, 10000.0);
+        osc.frequency.setup(MINIMUM_FREQUENCY, MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY);
+        // osc.amplitude.setup(1.0, 1.0, 10.0);
 
         // Start synthesizer using default stereo output at 44100 Hz.
         synth.start();
@@ -68,10 +70,27 @@ public class SynthesizerFX {
     }
 
     public Parent createView() {
-        Knob knob = new Knob(MINIMUM_FREQUENCY, MAXIMUM_FREQUENCY);
-        knob.valueProperty()
-            .addListener((obs, oldV, newV) -> osc.frequency.set(newV.doubleValue()));
-        return knob;
-    }
+        // knobs
+        HBox root = new HBox();
+        Knob knobOscFreq =
+            new Knob("Frequency", osc.frequency.get(), osc.frequency.getMinimum(), osc.frequency.getMaximum());
+        knobOscFreq.valueProperty()
+                   .addListener((observable, oldValue, newValue) -> osc.frequency.set(newValue.doubleValue()));
+        // Knob knobOscAmp =
+        // new Knob("Amplitude", osc.amplitude.get(),
+        // osc.amplitude.getMinimum(), osc.amplitude.getMaximum());
+        // knobOscAmp.valueProperty()
+        // .addListener((observable, oldValue, newValue) ->
+        // osc.amplitude.set(newValue.doubleValue()));
+        Knob knobOscPhase = new Knob("Phase", osc.phase.get(), 0.0, 1.0);
+        knobOscPhase.valueProperty()
+                    .addListener((observable, oldValue, newValue) ->
+                                 osc.phase.set(newValue.doubleValue()));
+        root.getChildren().addAll(knobOscFreq
+            // , knobOscAmp
+            // , knobOscPhase
+            );
 
+        return root;
+    }
 }
